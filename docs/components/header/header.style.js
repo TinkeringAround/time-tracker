@@ -1,4 +1,4 @@
-const template = document.createElement('template');
+const template = document.createElement("template");
 template.innerHTML = `
 <style>
 :host {
@@ -15,6 +15,8 @@ template.innerHTML = `
     font-size: 2.5rem;
     font-weight: bold;
     background: rgb(var(--grey));
+
+    border-bottom: 1px solid rgba(var(--black), 0.5);
 }
 
 :host h1 {
@@ -54,5 +56,5 @@ template.innerHTML = `
 </style>`;
 
 export const createHeaderStyles = () => {
-    return template.content.cloneNode(true)
+  return template.content.cloneNode(true);
 };

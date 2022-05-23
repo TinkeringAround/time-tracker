@@ -1,4 +1,4 @@
-const template = document.createElement('template');
+const template = document.createElement("template");
 template.innerHTML = `
 <style>
 :host {
@@ -21,8 +21,8 @@ template.innerHTML = `
 
 :host svg {
     display: block;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.25rem;
+    height: 1.25rem;
     
     fill: rgb(var(--white));
     
@@ -31,5 +31,5 @@ template.innerHTML = `
 </style>`;
 
 export const createIconButtonStyles = () => {
-    return template.content.cloneNode(true)
+  return template.content.cloneNode(true);
 };

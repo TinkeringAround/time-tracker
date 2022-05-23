@@ -1,4 +1,4 @@
-const template = document.createElement('template');
+const template = document.createElement("template");
 template.innerHTML = `
 <style>
 :host {
@@ -6,7 +6,9 @@ template.innerHTML = `
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: repeat(4, min-content);
 
+    min-height: 100px;
     padding: 0.5rem;
+    
     border-radius: 2px;
 }
 
@@ -82,5 +84,5 @@ template.innerHTML = `
 </style>`;
 
 export const createDateButtonStyles = () => {
-    return template.content.cloneNode(true)
+  return template.content.cloneNode(true);
 };
