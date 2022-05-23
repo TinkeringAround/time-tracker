@@ -6,7 +6,7 @@ template.innerHTML = `
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: repeat(4, min-content);
 
-    min-height: 100px;
+    min-height: 150px;
     padding: 0.5rem;
     
     border-radius: 2px;
@@ -19,13 +19,6 @@ template.innerHTML = `
 
 :host(:not([disabled]):hover) {
     background: rgb(var(--light-blue));
-}
-
-:host([disabled]) {
-    color: rgb(var(--dark));
-    background: rgba(var(--grey), 0.5);
-    
-    cursor: default;
 }
 
 :host h1 {
@@ -49,18 +42,19 @@ template.innerHTML = `
     box-sizing: border-box;
 }
 
-:host([work-place="Mobile Arbeit"]) {
-    color: rgb(var(--white));
+:host([work-place="Büro"]) {
     background: rgb(var(--light-blue));
 }
 
+:host([work-place="Mobile Arbeit"]) {
+    background: rgb(var(--violet));
+}
+
 :host([work-place="Urlaub"]) {
-    color: rgb(var(--white));
     background: rgb(var(--green));
 }
 
 :host([work-place="Krankheit"]) {
-    color: rgb(var(--white));
     background: rgb(var(--pink));
 }
 
@@ -80,6 +74,13 @@ template.innerHTML = `
 :host([is-today]) span[work-time] { 
     color: rgb(var(--black));
     background: rgb(var(--white));
+}
+
+:host([disabled]) {
+    color: rgb(var(--dark));
+    background: rgba(var(--grey), 0.5);
+    
+    cursor: default;
 }
 </style>`;
 

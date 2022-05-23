@@ -1,4 +1,4 @@
-const template = document.createElement('template');
+const template = document.createElement("template");
 template.innerHTML = `
 <style>
 :host {
@@ -44,18 +44,19 @@ template.innerHTML = `
     border-radius: 5px;
 }
 
-:host div[work-place="Mobile Arbeit"] {
-    color: rgb(var(--white));
+:host div[work-place="Büro"] {
     background: rgb(var(--light-blue));
 }
 
+:host div[work-place="Mobile Arbeit"] {
+    background: rgb(var(--violet));
+}
+
 :host div[work-place="Urlaub"] {
-    color: rgb(var(--white));
     background: rgb(var(--green));
 }
 
 :host div[work-place="Krankheit"] {
-    color: rgb(var(--white));
     background: rgb(var(--pink));
 }
 
@@ -63,8 +64,12 @@ template.innerHTML = `
     color: rgb(var(--white));
     background: rgb(var(--blue));
 }
+
+:host div[is-weekend] {
+    background: rgba(var(--black), 0.05);
+}
 </style>`;
 
 export const createMonthStyles = () => {
-    return template.content.cloneNode(true)
+  return template.content.cloneNode(true);
 };
