@@ -149,7 +149,12 @@ export class Day extends HTMLElement {
         this.getPause(),
         this.getEnd()
       );
-      this.tagElement.textContent = `${hours}h ${minutes}Min`;
+
+      let content = `${hours}h`;
+      if (minutes > 0) {
+        content += ` ${minutes}Min`;
+      }
+      this.tagElement.textContent = content;
       this.tagElement.style.opacity = "1";
     } else {
       this.tagElement.style.opacity = "0";
