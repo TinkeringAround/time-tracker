@@ -4,6 +4,7 @@ import { Button } from "../button/button.webcomponent.js";
 import { Input } from "../input/input.webcomponent.js";
 import { Dropdown } from "../dropdown/dropdown.webcomponent.js";
 import { Store } from "../../lib/store/store.js";
+import { DropdownEvents } from "../dropdown/events.js";
 
 export class Dialog extends HTMLElement {
   static tag = "time-tracker-dialog";
@@ -11,7 +12,7 @@ export class Dialog extends HTMLElement {
   startInputElement;
   pauseInputElement;
   endInputElement;
-  dropdownElement;
+  workPlaceElement;
   dateData;
 
   constructor() {
@@ -23,7 +24,7 @@ export class Dialog extends HTMLElement {
       this.startInputElement,
       this.pauseInputElement,
       this.endInputElement,
-      this.dropdownElement,
+      this.workPlaceElement,
     ] = Dialog.initializeForm();
     const footerElement = Dialog.initializeFooter();
     contentElement.append(this.formElement, footerElement);
@@ -50,11 +51,15 @@ export class Dialog extends HTMLElement {
   onOpen(dateData) {
     this.dateData = dateData;
     const { start, end, pause, workPlace } = dateData;
+    const disabled = workPlace === "Krankheit" || workPlace === "Urlaub";
 
     this.startInputElement.value = start ?? "08:00";
+    this.startInputElement.blocked = disabled;
     this.pauseInputElement.value = pause ?? "00:40";
+    this.pauseInputElement.blocked = disabled;
     this.endInputElement.value = end ?? "15:40";
-    this.dropdownElement.value = workPlace ?? "Büro";
+    this.endInputElement.blocked = disabled;
+    this.workPlaceElement.value = workPlace ?? "Büro";
 
     this.setAttribute("visible", "");
   }
@@ -104,27 +109,35 @@ export class Dialog extends HTMLElement {
     const endInputElement = Input.create("Ende", "15:40");
     endInputElement.style.gridArea = "end";
 
-    const dropdownElement = Dropdown.create("Arbeitsort", "Büro", [
+    const workPlaceElement = Dropdown.create("Arbeitsort", "Büro", [
       "Büro",
       "Mobile Arbeit",
       "Krankheit",
       "Urlaub",
     ]);
-    dropdownElement.style.gridArea = "dropdown";
+    workPlaceElement.style.gridArea = "dropdown";
+    workPlaceElement.addEventListener(DropdownEvents.change, (event) => {
+      const { value } = event.detail;
+      const disabled = value === "Krankheit" || value === "Urlaub";
+
+      startInputElement.blocked = disabled;
+      pauseInputElement.blocked = disabled;
+      endInputElement.blocked = disabled;
+    });
 
     formElement.append(
       headingElement,
       startInputElement,
       pauseInputElement,
       endInputElement,
-      dropdownElement
+      workPlaceElement
     );
     return [
       formElement,
       startInputElement,
       pauseInputElement,
       endInputElement,
-      dropdownElement,
+      workPlaceElement,
     ];
   }
 }

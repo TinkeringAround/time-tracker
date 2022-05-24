@@ -1,75 +1,77 @@
-import {createDropdownStyles} from "./dropdown.style.js";
+import { createDropdownStyles } from "./dropdown.style.js";
+import { DropdownChangeEvent } from "./events.js";
 
 export class Dropdown extends HTMLElement {
-    static tag = "time-tracker-dropdown"
-    shadowRoot;
-    selectElement;
+  static tag = "time-tracker-dropdown";
+  shadowRoot;
+  selectElement;
 
-    static create(name, value, options) {
-        const dropDownElement = document.createElement(Dropdown.tag);
-        dropDownElement.label = name;
-        dropDownElement.value = value;
-        dropDownElement.options = options;
+  static create(name, value, options) {
+    const dropDownElement = document.createElement(Dropdown.tag);
+    dropDownElement.label = name;
+    dropDownElement.value = value;
+    dropDownElement.options = options;
 
-        return dropDownElement;
+    return dropDownElement;
+  }
+
+  set label(label) {
+    this.setAttribute("label", label);
+  }
+
+  get label() {
+    return this.getAttribute("label");
+  }
+
+  set value(value) {
+    this.setAttribute("value", value);
+
+    if (this.selectElement) {
+      this.selectElement.value = value;
     }
+  }
 
-    set label(label) {
-        this.setAttribute("label", label);
-    }
+  get value() {
+    return this.getAttribute("value");
+  }
 
-    get label() {
-        return this.getAttribute("label");
-    }
+  set options(options) {
+    this.setAttribute("options", options);
+  }
 
-    set value(value) {
-        this.setAttribute("value", value);
+  get options() {
+    return this.getAttribute("options").split(",");
+  }
 
-        if (this.selectElement) {
-            this.selectElement.value = value;
-        }
-    }
+  constructor() {
+    super();
 
-    get value() {
-        return this.getAttribute("value");
-    }
+    this.shadowRoot = this.attachShadow({ mode: "open" });
+    this.shadowRoot.append(createDropdownStyles());
+  }
 
-    set options(options) {
-        this.setAttribute("options", options);
-    }
+  connectedCallback() {
+    const labelElement = document.createElement("label");
+    labelElement.textContent = this.label;
 
-    get options() {
-        return this.getAttribute("options").split(",");
-    }
+    this.selectElement = document.createElement("select");
+    this.selectElement.name = this.label;
+    this.selectElement.value = this.value;
+    this.selectElement.onchange = (event) => {
+      if (event.target) {
+        this.value = event.target.value;
+        this.dispatchEvent(new DropdownChangeEvent(event.target.value));
+      }
+    };
 
-    constructor() {
-        super();
+    this.options.forEach((option) => {
+      const optionElement = document.createElement("option");
+      optionElement.value = option;
+      optionElement.text = option;
+      optionElement.selected = option === this.value;
+      this.selectElement.options.add(optionElement);
+    });
 
-        this.shadowRoot = this.attachShadow({mode: "open"});
-        this.shadowRoot.append(createDropdownStyles());
-    }
-
-    connectedCallback() {
-        const labelElement = document.createElement("label");
-        labelElement.textContent = this.label;
-
-        this.selectElement = document.createElement("select");
-        this.selectElement.name = this.label;
-        this.selectElement.value = this.value;
-        this.selectElement.onchange = ({target}) => {
-            if (target) {
-                this.value = target.value;
-            }
-        }
-
-        this.options.forEach(option => {
-            const optionElement = document.createElement("option");
-            optionElement.value = option;
-            optionElement.text = option;
-            optionElement.selected = option === this.value;
-            this.selectElement.options.add(optionElement);
-        });
-
-        this.shadowRoot.append(labelElement, this.selectElement);
-    }
+    this.shadowRoot.append(labelElement, this.selectElement);
+  }
 }

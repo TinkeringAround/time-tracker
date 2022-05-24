@@ -1,4 +1,4 @@
-const template = document.createElement('template');
+const template = document.createElement("template");
 template.innerHTML = `
 <style>
 :host {
@@ -20,6 +20,12 @@ template.innerHTML = `
     color: rgb(var(--black));
     font-size: 1.25rem;
     font-weight: bold;
+
+    transition: all 0.15s ease-in-out;
+}
+
+:host([blocked]) label {
+    color: rgb(var(--dark));
 }
 
 :host input {
@@ -37,14 +43,19 @@ template.innerHTML = `
     box-sizing: border-box;
     outline: none;
     
-    transition: all 0.1s ease-in-out;
+    transition: all 0.15s ease-in-out;
 }
 
-:host input:hover {
+:host input[disabled] {
+    color: rgb(var(--dark));
+    background: transparent;
+}
+
+:host input:not([disabled]):hover {
     background: rgb(var(--light-blue));
 }
 
-:host input:focus-visible {
+:host input:not([disabled]):focus-visible {
     border: none;
 }
 
@@ -55,10 +66,8 @@ template.innerHTML = `
 :host input::-webkit-calendar-picker-indicator {
     display: none;
 }
-
-
 </style>`;
 
 export const createInputStyles = () => {
-    return template.content.cloneNode(true)
+  return template.content.cloneNode(true);
 };
