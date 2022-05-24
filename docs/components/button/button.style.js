@@ -1,4 +1,4 @@
-const template = document.createElement('template');
+const template = document.createElement("template");
 template.innerHTML = `
 <style>
 :host button {
@@ -10,7 +10,7 @@ template.innerHTML = `
     
     padding: 0.25rem 1rem;
     
-    font-size: 1.25rem;
+    font-size: 1rem;
     border-radius: 2px;
     outline: none;
     border: none;
@@ -31,23 +31,14 @@ template.innerHTML = `
 
 :host([variant="secondary"]) button {
     color: rgb(var(--black));
-    background: rgb(var(--white));
-}
-
-:host([variant="secondary"]) button:hover {
-    background: rgba(var(--light-blue), 0.5);
-}
-
-:host([variant="tertiary"]) button {
-    color: rgb(var(--black));
     background: rgb(var(--grey));
 }
 
-:host([variant="tertiary"]) button:hover {
-    background: rgba(var(--grey), 0.8);
+:host([variant="secondary"]) button:hover {
+    background: rgba(var(--light-blue), 0.8);
 }
 </style>`;
 
 export const createButtonStyles = () => {
-    return template.content.cloneNode(true)
+  return template.content.cloneNode(true);
 };
