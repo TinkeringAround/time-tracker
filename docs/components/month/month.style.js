@@ -52,21 +52,25 @@ template.innerHTML = `
     background: rgb(var(--violet));
 }
 
+:host div[work-place="Gleitzeit"] {
+    background: rgb(var(--yellow));
+}
+
 :host div[work-place="Urlaub"] {
     background: rgb(var(--green));
 }
 
-:host div[work-place="Krankheit"] {
+:host div[work-place="Krank"] {
     background: rgb(var(--pink));
+}
+
+:host div[is-weekend] {
+    background: rgba(var(--black), 0.05);
 }
 
 :host div[is-today] {
     color: rgb(var(--white));
     background: rgb(var(--blue));
-}
-
-:host div[is-weekend] {
-    background: rgba(var(--black), 0.05);
 }
 </style>`;
 

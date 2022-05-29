@@ -10,6 +10,7 @@ import { FileImporter } from "./file-importer/file-importer.webcomponent.js";
 import { IconButton } from "./icon-button/icon-button.webcomponent.js";
 import { Controls } from "./controls/controls.webcomponent.js";
 import { Legend } from "./legend/legend.webcomponent.js";
+import {Credits} from "./credits/credits.webcomponent.js";
 
 customElements.define(Button.tag, Button);
 customElements.define(Header.tag, Header);
@@ -23,3 +24,4 @@ customElements.define(FileImporter.tag, FileImporter);
 customElements.define(IconButton.tag, IconButton);
 customElements.define(Controls.tag, Controls);
 customElements.define(Legend.tag, Legend);
+customElements.define(Credits.tag, Credits);

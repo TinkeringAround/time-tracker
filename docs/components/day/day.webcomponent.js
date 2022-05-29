@@ -1,192 +1,206 @@
-import { createDateButtonStyles } from "./day.style.js";
+import {createDateButtonStyles} from "./day.style.js";
 import {
-  calcWorkTime,
-  days_short,
-  isToday,
-  separateDate,
-  toDateString,
+    calcTimeCreditsForDay,
+    days_short,
+    isToday,
+    separateDate,
+    toDateString,
 } from "../../lib/date.js";
-import { DialogOpenEvent } from "../dialog/events.js";
-import { StoreEvents } from "../../lib/store/events.js";
-import { Store } from "../../lib/store/store.js";
+import {DialogOpenEvent} from "../dialog/events.js";
+import {StoreEvents} from "../../lib/store/events.js";
+import {Store} from "../../lib/store/store.js";
+import {createIconElement} from "../icon-button/icons.js";
 
 export class Day extends HTMLElement {
-  static tag = "time-tracker-day";
-  headerElement;
-  dayOfWeekElement;
-  tagElement;
+    static tag = "time-tracker-day";
+    headerElement;
+    dayOfWeekElement;
+    tagElement;
 
-  static create(day, month, year, disabled) {
-    const dateButtonElement = document.createElement(Day.tag);
-    dateButtonElement.setAttribute("day", day);
-    dateButtonElement.setAttribute("month", month);
-    dateButtonElement.setAttribute("year", year);
+    static create(day, month, year, disabled) {
+        const dateButtonElement = document.createElement(Day.tag);
+        dateButtonElement.setAttribute("day", day);
+        dateButtonElement.setAttribute("month", month);
+        dateButtonElement.setAttribute("year", year);
 
-    if (disabled) {
-      dateButtonElement.setAttribute("disabled", "");
+        if (disabled) {
+            dateButtonElement.setAttribute("disabled", "");
+        }
+
+        if (isToday(day, month, year)) {
+            dateButtonElement.setAttribute("is-today", "");
+        }
+
+        return dateButtonElement;
     }
 
-    if (isToday(day, month, year)) {
-      dateButtonElement.setAttribute("is-today", "");
+    getDay() {
+        return parseInt(this.getAttribute("day"));
     }
 
-    return dateButtonElement;
-  }
+    getMonth() {
+        return parseInt(this.getAttribute("month"));
+    }
 
-  getDay() {
-    return parseInt(this.getAttribute("day"));
-  }
+    getYear() {
+        return parseInt(this.getAttribute("year"));
+    }
 
-  getMonth() {
-    return parseInt(this.getAttribute("month"));
-  }
+    getStart() {
+        return this.getAttribute("start");
+    }
 
-  getYear() {
-    return parseInt(this.getAttribute("year"));
-  }
+    getPause() {
+        return this.getAttribute("pause");
+    }
 
-  getStart() {
-    return this.getAttribute("start");
-  }
+    getEnd() {
+        return this.getAttribute("end");
+    }
 
-  getPause() {
-    return this.getAttribute("pause");
-  }
+    getWorkPlace() {
+        return this.getAttribute("work-place");
+    }
 
-  getEnd() {
-    return this.getAttribute("end");
-  }
+    getDisabled() {
+        return this.getAttribute("disabled") === "";
+    }
 
-  getWorkPlace() {
-    return this.getAttribute("work-place");
-  }
+    constructor() {
+        super();
 
-  getDisabled() {
-    return this.getAttribute("disabled") === "";
-  }
+        this.headerElement = document.createElement("h1");
+        this.dayOfWeekElement = document.createElement("span");
+        this.dayOfWeekElement.setAttribute("day-of-week", "");
+        this.tagElement = document.createElement("span");
+        this.tagElement.setAttribute("work-time", "");
 
-  constructor() {
-    super();
+        this.attachShadow({mode: "closed"}).append(
+            createDateButtonStyles(),
+            this.headerElement,
+            this.dayOfWeekElement,
+            this.tagElement
+        );
 
-    this.headerElement = document.createElement("h1");
-    this.dayOfWeekElement = document.createElement("span");
-    this.dayOfWeekElement.setAttribute("day-of-week", "");
-    this.tagElement = document.createElement("span");
-    this.tagElement.setAttribute("work-time", "");
+        this.addEventListener("click", () => {
+            if (!this.getDisabled()) {
+                window.dispatchEvent(
+                    new DialogOpenEvent(
+                        this.getDay(),
+                        this.getMonth(),
+                        this.getYear(),
+                        this.getStart(),
+                        this.getEnd(),
+                        this.getPause(),
+                        this.getWorkPlace()
+                    )
+                );
+            }
+        });
 
-    this.attachShadow({ mode: "closed" }).append(
-      createDateButtonStyles(),
-      this.headerElement,
-      this.dayOfWeekElement,
-      this.tagElement
-    );
+        window.addEventListener(StoreEvents.dayDataChange, (event) =>
+            this.onDayDataChange(event.detail)
+        );
+    }
 
-    this.addEventListener("click", () => {
-      if (!this.getDisabled()) {
-        window.dispatchEvent(
-          new DialogOpenEvent(
+    connectedCallback() {
+        const date = toDateString(this.getDay(), this.getMonth(), this.getYear());
+        const data = Store.data[date];
+
+        if (data) {
+            if (data.workPlace !== "Urlaub" && data.workPlace !== "Krank") {
+                this.setAttribute("start", data.start);
+                this.setAttribute("pause", data.pause);
+                this.setAttribute("end", data.end);
+            }
+            this.setAttribute("work-place", data.workPlace);
+        }
+
+        this.render();
+    }
+
+    disconnectedCallback() {
+        window.removeEventListener(StoreEvents.dayDataChange, (event) =>
+            this.onDayDataChange(event.detail)
+        );
+    }
+
+    render() {
+        const {dayOfWeek} = separateDate(
             this.getDay(),
             this.getMonth(),
-            this.getYear(),
-            this.getStart(),
-            this.getEnd(),
-            this.getPause(),
-            this.getWorkPlace()
-          )
+            this.getYear()
         );
-      }
-    });
+        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+        const holiday =
+            Store.holidays[
+                toDateString(this.getDay(), this.getMonth(), this.getYear())
+                ];
 
-    window.addEventListener(StoreEvents.dayDataChange, (event) =>
-      this.onDateDataChange(event.detail)
-    );
-  }
+        this.headerElement.textContent = this.getDay();
+        this.dayOfWeekElement.textContent = days_short[dayOfWeek];
 
-  connectedCallback() {
-    const date = toDateString(this.getDay(), this.getMonth(), this.getYear());
-    const data = Store.data[date];
+        if (isWeekend || holiday) {
+            this.setAttribute("disabled", "");
 
-    if (data) {
-      if (data.workPlace !== "Urlaub" && data.workPlace !== "Krankheit") {
-        this.setAttribute("start", data.start);
-        this.setAttribute("pause", data.pause);
-        this.setAttribute("end", data.end);
-      }
-      this.setAttribute("work-place", data.workPlace);
-    }
+            if (holiday) {
+                this.setAttribute("work-place", "holiday");
+                this.tagElement.textContent = holiday;
+            } else {
+                this.tagElement.style.opacity = "0";
+            }
 
-    this.render();
-  }
+            return;
+        }
 
-  disconnectedCallback() {
-    window.removeEventListener(StoreEvents.dayDataChange, (event) =>
-      this.onDateDataChange(event.detail)
-    );
-  }
+        const wp = this.getWorkPlace();
+        if (wp === "Gleitzeit" || wp === "Krank" || wp === "Urlaub") {
+            this.tagElement.textContent = this.getWorkPlace();
+            this.tagElement.style.opacity = "1";
+            return;
+        }
 
-  render() {
-    const { dayOfWeek } = separateDate(
-      this.getDay(),
-      this.getMonth(),
-      this.getYear()
-    );
-    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-    const holiday =
-      Store.holidays[
-        toDateString(this.getDay(), this.getMonth(), this.getYear())
-      ];
+        if (this.getStart() && this.getPause() && this.getEnd()) {
+            this.setAttribute("start", this.getStart());
+            this.setAttribute("pause", this.getPause());
+            this.setAttribute("end", this.getEnd());
 
-    this.headerElement.textContent = this.getDay();
-    this.dayOfWeekElement.textContent = days_short[dayOfWeek];
+            const [hours, minutes] = calcTimeCreditsForDay(
+                this.getStart(),
+                this.getPause(),
+                this.getEnd(),
+                this.getWorkPlace(),
+            );
 
-    if (this.getStart() && this.getPause() && this.getEnd()) {
-      this.setAttribute("start", this.getStart());
-      this.setAttribute("pause", this.getPause());
-      this.setAttribute("end", this.getEnd());
+            if (hours === 0 && minutes === 0) {
+                this.tagElement.textContent = "";
+                this.tagElement.append(createIconElement("check")[0]);
+            } else {
+                const creditsForDay = hours * 60 + minutes;
+                this.tagElement.textContent = `${creditsForDay > 0 ? "+" : ""}${creditsForDay} Min`;
+            }
 
-      const [hours, minutes] = calcWorkTime(
-        this.getStart(),
-        this.getPause(),
-        this.getEnd()
-      );
+            this.tagElement.style.opacity = "1";
+            return;
+        }
 
-      let content = `${hours}h`;
-      if (minutes > 0) {
-        content += ` ${minutes}Min`;
-      }
-      this.tagElement.textContent = content;
-      this.tagElement.style.opacity = "1";
-    } else {
-      this.tagElement.style.opacity = "0";
-    }
-
-    if (isWeekend || holiday) {
-      this.setAttribute("disabled", "");
-
-      if (holiday) {
-        this.setAttribute("work-place", "holiday");
-        this.tagElement.textContent = holiday;
-        this.tagElement.style.opacity = "1";
-      } else {
         this.tagElement.style.opacity = "0";
-      }
     }
-  }
 
-  onDateDataChange(detail) {
-    const { day, month, year, start, end, pause, workPlace } = detail;
-    if (
-      this.getDay() === day &&
-      this.getMonth() === month &&
-      this.getYear() === year
-    ) {
-      if (workPlace !== "Urlaub" && workPlace !== "Krankheit") {
-        this.setAttribute("start", start);
-        this.setAttribute("pause", pause);
-        this.setAttribute("end", end);
-      }
-      this.setAttribute("work-place", workPlace);
-      this.render();
+    onDayDataChange(detail) {
+        const {day, month, year, start, end, pause, workPlace} = detail;
+        if (
+            this.getDay() === day &&
+            this.getMonth() === month &&
+            this.getYear() === year
+        ) {
+            if (workPlace !== "Urlaub" && workPlace !== "Krank") {
+                this.setAttribute("start", start);
+                this.setAttribute("pause", pause);
+                this.setAttribute("end", end);
+            }
+            this.setAttribute("work-place", workPlace);
+            this.render();
+        }
     }
-  }
 }

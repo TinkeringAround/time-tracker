@@ -36,11 +36,15 @@ export class IconButton extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    this.pathElement.setAttribute("d", icons[newValue]);
+    this.svgElement.setAttribute("title", icons[newValue].title);
+    this.svgElement.setAttribute("viewBox", icons[newValue].viewBox);
+    this.pathElement.setAttribute("d", icons[newValue].d);
   }
 
   connectedCallback() {
     this.setAttribute("icon", this.icon);
-    this.pathElement.setAttribute("d", icons[this.icon]);
+    this.svgElement.setAttribute("title", icons[this.icon].title);
+    this.svgElement.setAttribute("viewBox", icons[this.icon].viewBox);
+    this.pathElement.setAttribute("d", icons[this.icon].d);
   }
 }

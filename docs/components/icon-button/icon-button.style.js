@@ -21,8 +21,8 @@ template.innerHTML = `
 
 :host svg {
     display: block;
-    width: 1rem;
-    height: 1rem;
+    width: 1.25rem;
+    height: 1.25rem;
     
     fill: rgb(var(--white));
     

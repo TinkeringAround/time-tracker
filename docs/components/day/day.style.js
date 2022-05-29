@@ -9,11 +9,11 @@ template.innerHTML = `
     min-height: 150px;
     padding: 0.5rem;
     
-    border-radius: 2px;
+    border-radius: 10px;
 }
 
 :host(:not([disabled])) {
-    transition: all 0.1s ease-in-out;
+    transition: all 0.15s ease-in-out;
     cursor: pointer;
 }
 
@@ -23,6 +23,7 @@ template.innerHTML = `
 
 :host h1 {
     margin: 0;
+    padding-left: 1px;
 }
 
 :host span[day-of-week] {
@@ -31,35 +32,54 @@ template.innerHTML = `
 }
 
 :host span[work-time] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
     max-width: max-content;
     margin-top: 0.5rem;
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem 1rem;
     
     color: rgb(var(--black));
-    background: rgb(var(--grey));
+    background: rgb(var(--white));
     border-radius: 10px;
     
     box-sizing: border-box;
+    transition: all 0.15s ease-in-out;
 }
 
-:host([work-place="Büro"]) {
+:host([work-place="Büro"]) span[work-time] {
     background: rgb(var(--light-blue));
 }
 
-:host([work-place="Mobile Arbeit"]) {
+:host([work-place="Mobile Arbeit"]) span[work-time] {
     background: rgb(var(--violet));
 }
 
-:host([work-place="Urlaub"]) {
+:host([work-place="Gleitzeit"]) span[work-time] {
+    background: rgb(var(--yellow));
+}
+
+:host([work-place="Urlaub"]) span[work-time] {
     background: rgb(var(--green));
 }
 
-:host([work-place="Krankheit"]) {
+:host([work-place="Krank"]) span[work-time] {
     background: rgb(var(--pink));
 }
 
-:host([work-place="Krankheit"]) span[work-time], :host([work-place="Urlaub"]) span[work-time] {
-    display: none;
+:host span[work-time] svg {
+    width: 1rem;
+    height: 1rem;
+    
+    fill: rgb(var(--black));
+}
+
+:host([disabled]) {
+    color: rgb(var(--dark));
+    background: rgba(var(--grey), 0.5);
+    
+    cursor: default;
 }
 
 :host([is-today]) {
@@ -75,15 +95,8 @@ template.innerHTML = `
     color: rgb(var(--black));
     background: rgb(var(--white));
 }
-
-:host([disabled]) {
-    color: rgb(var(--dark));
-    background: rgba(var(--grey), 0.5);
-    
-    cursor: default;
-}
 </style>`;
 
 export const createDateButtonStyles = () => {
-  return template.content.cloneNode(true);
+    return template.content.cloneNode(true);
 };
