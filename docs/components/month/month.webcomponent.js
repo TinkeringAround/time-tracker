@@ -12,6 +12,7 @@ export class Month extends HTMLElement {
   static tag = "time-tracker-month";
   shadowRoot;
   headingElement;
+  spanElement;
 
   static create(month, year) {
     const monthElement = document.createElement(Month.tag);
@@ -40,8 +41,13 @@ export class Month extends HTMLElement {
     super();
 
     this.headingElement = document.createElement("h1");
+    this.spanElement = document.createElement("span");
     this.shadowRoot = this.attachShadow({ mode: "closed" });
-    this.shadowRoot.append(createMonthStyles(), this.headingElement);
+    this.shadowRoot.append(
+      createMonthStyles(),
+      this.headingElement,
+      this.spanElement
+    );
 
     this.addEventListener("click", () => {
       Store.setMonth(this.month);
@@ -51,6 +57,8 @@ export class Month extends HTMLElement {
 
   connectedCallback() {
     const daysInMonth = getDaysInMonth(this.month, this.year);
+    let workDaysInMonth = daysInMonth;
+    let workDaysWithData = 0;
 
     for (let i = 1; i <= daysInMonth; i++) {
       const data = Store.data[toDateString(i, this.month, this.year)];
@@ -64,6 +72,7 @@ export class Month extends HTMLElement {
       if (isWeekend || holiday) {
         divElement.setAttribute("is-weekend", "");
         divElement.setAttribute("work-place", "holiday");
+        workDaysInMonth -= 1;
       }
 
       if (isToday(i, this.month, this.year)) {
@@ -72,10 +81,15 @@ export class Month extends HTMLElement {
 
       if (data) {
         divElement.setAttribute("work-place", data.workPlace);
+        workDaysWithData += 1;
       }
 
       this.shadowRoot.append(divElement);
     }
     this.headingElement.textContent = months[this.month];
+    this.spanElement.textContent =
+      workDaysInMonth - workDaysWithData > 0
+        ? `${workDaysWithData}/${workDaysInMonth}`
+        : "";
   }
 }

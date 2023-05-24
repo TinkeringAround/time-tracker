@@ -21,16 +21,27 @@ template.innerHTML = `
     background: rgb(var(--light-blue));
 }
 
-:host h1 {
+:host h1, :host span {
     display: flex;
     align-items: center;
-    
-    grid-column-start: 1;
-    grid-column-end: 8;
-    
+
     margin: 0;
+}
+
+:host h1 {
+    grid-column-start: 1;
+    grid-column-end: 7;
+  
     font-size: 2rem;
     color: rgb(var(--black));
+}
+
+:host span {
+    grid-column-start: 7;
+    grid-column-end: 8;
+    
+    font-size: 1rem;
+    color: rgb(var(--dark));
 }
 
 :host div {

@@ -10,7 +10,7 @@ import { FileImporter } from "./file-importer/file-importer.webcomponent.js";
 import { IconButton } from "./icon-button/icon-button.webcomponent.js";
 import { Controls } from "./controls/controls.webcomponent.js";
 import { Legend } from "./legend/legend.webcomponent.js";
-import {Credits} from "./credits/credits.webcomponent.js";
+import { Credits } from "./credits/credits.webcomponent.js";
 
 customElements.define(Button.tag, Button);
 customElements.define(Header.tag, Header);
