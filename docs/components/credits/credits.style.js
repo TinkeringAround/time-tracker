@@ -9,38 +9,38 @@ template.innerHTML = `
     align-items: center;
     column-gap: 5px;
 
-    height: 3.25rem;
     width: fit-content;
     min-width: 100px;
     padding: 0 1rem;
-    margin-left: 0.5rem;
-
-    border-radius: 10px;
    
     box-sizing: border-box;
     transition: all 0.15s ease-in-out;
     cursor: pointer;
 }
 
-:host([credits="positive"]) {
-   background: rgb(var(--dark-green));
-}
-
-:host([credits="negative"]) {
-   background: rgb(var(--red));
+:host svg, :host span {
+    transition: all 0.1s ease-in-out;
 }
 
 :host svg {
-    height: 1rem;
-    width: 1rem;
-    
-    fill: rgb(var(--white));
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+:host([credits="positive"]) svg, :host([credits="positive"]) span {
+    fill: rgb(var(--dark-green));
+    color: rgb(var(--dark-green));
+}
+
+:host([credits="negative"]) svg, :host([credits="negative"]) span {
+    fill: rgb(var(--red));
+    color: rgb(var(--red));
 }
 
 :host span {
     display: block;
 
-    font-size: 0.85rem;
+    font-size: 1.1rem;
     font-weight: normal;
     color: rgb(var(--white));
     
@@ -49,7 +49,7 @@ template.innerHTML = `
 
 :host div[overlay] {
     position: absolute;
-    top: 0;
+    top: -0.5rem;
     right: 0;
 
     flex-direction: column;
@@ -152,5 +152,5 @@ template.innerHTML = `
 </style>`;
 
 export const createCreditsStyles = () => {
-    return template.content.cloneNode(true);
+  return template.content.cloneNode(true);
 };
