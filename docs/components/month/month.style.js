@@ -2,6 +2,8 @@ const template = document.createElement("template");
 template.innerHTML = `
 <style>
 :host {
+    position: relative;
+
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(6, 1fr);
@@ -42,6 +44,17 @@ template.innerHTML = `
     
     font-size: 1rem;
     color: rgb(var(--dark));
+}
+
+:host span[part="mobil"] {
+    position: absolute;
+    
+    bottom: 1rem;
+    right: 1rem;
+
+    grid-column: auto;
+
+    font-size: 0.65rem;
 }
 
 :host div {
@@ -86,5 +99,5 @@ template.innerHTML = `
 </style>`;
 
 export const createMonthStyles = () => {
-  return template.content.cloneNode(true);
+    return template.content.cloneNode(true);
 };

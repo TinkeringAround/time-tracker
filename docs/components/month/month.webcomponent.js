@@ -13,6 +13,7 @@ export class Month extends HTMLElement {
   shadowRoot;
   headingElement;
   spanElement;
+  mobileSpanElement;
 
   static create(month, year) {
     const monthElement = document.createElement(Month.tag);
@@ -42,11 +43,15 @@ export class Month extends HTMLElement {
 
     this.headingElement = document.createElement("h1");
     this.spanElement = document.createElement("span");
+    this.mobileSpanElement = document.createElement("span");
+    this.mobileSpanElement.setAttribute("part", "mobil");
+
     this.shadowRoot = this.attachShadow({ mode: "closed" });
     this.shadowRoot.append(
       createMonthStyles(),
       this.headingElement,
-      this.spanElement
+      this.spanElement,
+      this.mobileSpanElement
     );
 
     this.addEventListener("click", () => {
@@ -59,6 +64,7 @@ export class Month extends HTMLElement {
     const daysInMonth = getDaysInMonth(this.month, this.year);
     let workDaysInMonth = daysInMonth;
     let workDaysWithData = 0;
+    let mobileArbeit = 0;
 
     for (let i = 1; i <= daysInMonth; i++) {
       const data = Store.data[toDateString(i, this.month, this.year)];
@@ -82,6 +88,10 @@ export class Month extends HTMLElement {
       if (data) {
         divElement.setAttribute("work-place", data.workPlace);
         workDaysWithData += 1;
+
+        if (data.workPlace === "Mobile Arbeit") {
+          mobileArbeit += 1;
+        }
       }
 
       this.shadowRoot.append(divElement);
@@ -91,5 +101,7 @@ export class Month extends HTMLElement {
       workDaysInMonth - workDaysWithData > 0
         ? `${workDaysWithData}/${workDaysInMonth}`
         : "";
+
+    this.mobileSpanElement.textContent = `${mobileArbeit} Tage mobil`;
   }
 }
