@@ -1,4 +1,4 @@
-import {createDateButtonStyles} from "./day.style.js";
+import { createDateButtonStyles } from "./day.style.js";
 import {
     calcTimeCreditsForDay,
     days_short,
@@ -6,10 +6,10 @@ import {
     separateDate,
     toDateString,
 } from "../../lib/date.js";
-import {DialogOpenEvent} from "../dialog/events.js";
-import {StoreEvents} from "../../lib/store/events.js";
-import {Store} from "../../lib/store/store.js";
-import {createIconElement} from "../icon-button/icons.js";
+import { DialogOpenEvent } from "../dialog/events.js";
+import { StoreEvents } from "../../lib/store/events.js";
+import { Store } from "../../lib/store/store.js";
+import { createIconElement } from "../icon-button/icons.js";
 
 export class Day extends HTMLElement {
     static tag = "time-tracker-day";
@@ -75,7 +75,7 @@ export class Day extends HTMLElement {
         this.tagElement = document.createElement("span");
         this.tagElement.setAttribute("work-time", "");
 
-        this.attachShadow({mode: "closed"}).append(
+        this.attachShadow({ mode: "closed" }).append(
             createDateButtonStyles(),
             this.headerElement,
             this.dayOfWeekElement,
@@ -108,7 +108,7 @@ export class Day extends HTMLElement {
         const data = Store.data[date];
 
         if (data) {
-            if (data.workPlace !== "Urlaub" && data.workPlace !== "Krank") {
+            if (data.workPlace !== "Urlaub" && data.workPlace !== "Krank" && data.workPlace !== "Freier Tag") {
                 this.setAttribute("start", data.start);
                 this.setAttribute("pause", data.pause);
                 this.setAttribute("end", data.end);
@@ -126,7 +126,7 @@ export class Day extends HTMLElement {
     }
 
     render() {
-        const {dayOfWeek} = separateDate(
+        const { dayOfWeek } = separateDate(
             this.getDay(),
             this.getMonth(),
             this.getYear()
@@ -135,7 +135,7 @@ export class Day extends HTMLElement {
         const holiday =
             Store.holidays[
                 toDateString(this.getDay(), this.getMonth(), this.getYear())
-                ];
+            ];
 
         this.headerElement.textContent = this.getDay();
         this.dayOfWeekElement.textContent = days_short[dayOfWeek];
@@ -154,7 +154,7 @@ export class Day extends HTMLElement {
         }
 
         const wp = this.getWorkPlace();
-        if (wp === "Gleitzeit" || wp === "Krank" || wp === "Urlaub") {
+        if (wp === "Freier Tag" || wp === "Gleitzeit" || wp === "Krank" || wp === "Urlaub") {
             this.tagElement.textContent = this.getWorkPlace();
             this.tagElement.style.opacity = "1";
             return;
@@ -188,7 +188,7 @@ export class Day extends HTMLElement {
     }
 
     onDayDataChange(detail) {
-        const {day, month, year, start, end, pause, workPlace} = detail;
+        const { day, month, year, start, end, pause, workPlace } = detail;
         if (
             this.getDay() === day &&
             this.getMonth() === month &&

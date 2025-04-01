@@ -60,6 +60,10 @@ template.innerHTML = `
     background: rgb(var(--yellow));
 }
 
+:host([work-place="Freier Tag"]) span[work-time] {
+    background: rgb(var(--dark));
+}
+
 :host([work-place="Urlaub"]) span[work-time] {
     background: rgb(var(--green));
 }

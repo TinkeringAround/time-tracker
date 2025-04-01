@@ -1,6 +1,6 @@
-import {createLegendStyles} from "./legend.style.js";
-import {Button} from "../button/button.webcomponent.js";
-import {workPlaces} from "../../lib/date.js";
+import { createLegendStyles } from "./legend.style.js";
+import { Button } from "../button/button.webcomponent.js";
+import { workPlaces } from "../../lib/date.js";
 
 export class Legend extends HTMLElement {
     static tag = "time-tracker-legend";
@@ -41,8 +41,11 @@ export class Legend extends HTMLElement {
                     case "Gleitzeit":
                         divElement.style.background = "rgb(var(--yellow))";
                         break;
+                    case "Freier Tag":
+                        divElement.style.background = "rgb(var(--dark))";
+                        break;
                     case "Krank":
-                        divElement.style.background = "rgb(var(--pink))";
+                        divElement.style.background = "rgb(var(--red))";
                         break;
                     case "Urlaub":
                         divElement.style.background = "rgb(var(--green))";
@@ -54,7 +57,7 @@ export class Legend extends HTMLElement {
         );
         legendElement.append(...legendElements);
 
-        this.attachShadow({mode: "closed"}).append(
+        this.attachShadow({ mode: "closed" }).append(
             createLegendStyles(),
             toggleElement,
             legendElement

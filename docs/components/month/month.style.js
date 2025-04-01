@@ -80,6 +80,10 @@ template.innerHTML = `
     background: rgb(var(--yellow));
 }
 
+:host div[work-place="Freier Tag"] {
+    background: rgb(var(--dark));
+}
+
 :host div[work-place="Urlaub"] {
     background: rgb(var(--green));
 }

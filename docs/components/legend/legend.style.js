@@ -10,6 +10,8 @@ template.innerHTML = `
     grid-template-rows: minmax(0, 1fr);
     align-items: center;
     justify-content: flex-end;
+
+    z-index: 10;
 }
 
 :host div[legend] {
@@ -52,6 +54,10 @@ template.innerHTML = `
     width: 100%;
 }
 
+:host div[legend] div[legend-element]:nth-of-type(3) {
+    margin-bottom: 1rem;
+}
+
 :host div[legend] div[legend-element] span {
     color: rgb(var(--black));
     font-size: 1rem;
@@ -67,5 +73,5 @@ template.innerHTML = `
 </style>`;
 
 export const createLegendStyles = () => {
-  return template.content.cloneNode(true);
+    return template.content.cloneNode(true);
 };

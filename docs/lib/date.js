@@ -65,7 +65,7 @@ export const calcTimeCreditsForDay = (start, pause, end, workPlace) => {
 
     const workTime = splitTime(end);
     [start, pause]
-        .map((time) => splitTime(time))
+    .map((time) => splitTime(time))
         .forEach((time) => {
             time.forEach((segment, i) => {
                 workTime[i] -= segment;
@@ -94,9 +94,9 @@ export const calcTimeCredits = (storeData, year = null) => {
     Object.keys(storeData)
         .filter(date => year ? date.includes(`.${year}`) : true)
         .map(date => storeData[date])
-        .filter(({workPlace}) => workPlace && workPlace !== "Krank" && workPlace !== "Urlaub")
+        .filter(({ workPlace }) => workPlace && workPlace !== "Krank" && workPlace !== "Urlaub")
         .forEach(data => {
-            const {start, pause, end, workPlace} = data;
+            const { start, pause, end, workPlace } = data;
             const [workTimeHours, workTimeMinutes] = calcTimeCreditsForDay(start, pause, end, workPlace);
 
             hours += workTimeHours;
@@ -117,7 +117,7 @@ export const calcTimeCredits = (storeData, year = null) => {
     return hours * 60 + minutes;
 }
 
-export const workPlaces = ["Büro", "Mobile Arbeit", "Gleitzeit", "Krank", "Urlaub"];
+export const workPlaces = ["Büro", "Mobile Arbeit", "Gleitzeit", "Freier Tag", "Krank", "Urlaub"];
 export const days_short = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
 export const months = [
     "Januar",
